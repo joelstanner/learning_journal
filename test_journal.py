@@ -50,3 +50,17 @@ def db(request):
     request.addfinalizer(cleanup)
 
     return settings
+
+
+@pytest.yield_fixture(scope='function')
+def req_context(db, request):
+    """mock a request with a database attached"""
+    settings = db
+    req = testing.DummyRequest()
+    with closing(connect_db(settings)) as db:
+        req.db = db
+        req.exception = None
+        yield req
+
+        # afer a test has run, we clear out entries for isolation
+        clear_entries(settings)
