@@ -95,6 +95,7 @@ def test_read_entries_empty(req_context):
     assert 'entries' in result
     assert len(result['entries']) == 0
 
+
 def test_read_entries(req_context):
     # prepare data for testing
     now = datetime.datetime.utcnow()
