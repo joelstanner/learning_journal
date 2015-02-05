@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import os
 import logging
 import psycopg2
@@ -17,7 +18,12 @@ CREATE TABLE IF NOT EXISTS entries (
     text TEXT NOT NULL,
     created TIMESTAMP NOT NULL
 )
+
 """
+INSERT_ENTRY = """
+INSERT INTO entries (title, text, created) VALUES (%s, %s, %s)
+"""
+
 logging.basicConfig()
 log = logging.getLogger(__file__)
 
@@ -90,6 +96,13 @@ def main():
     app = config.make_wsgi_app()
     return app
 
+
+def write_entry(request):
+    """write an entry to the database"""
+    title = request.params.get('title', None)
+    text = request.params.get('text', None)
+    created = datetime.datetime.utcnow()
+    request.db.cursor().execute(INSERT_ENTRY, [title, text, created])
 
 if __name__ == '__main__':
     app = main()
