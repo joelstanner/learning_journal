@@ -33,11 +33,6 @@ logging.basicConfig()
 log = logging.getLogger(__file__)
 
 
-@view_config(route_name='home', renderer='string')
-def home(request):
-    return "Hello World"
-
-
 def connect_db(settings):
     """Return a connetion to the configured database"""
     return psycopg2.connect(settings['db'])
@@ -110,7 +105,7 @@ def write_entry(request):
     created = datetime.datetime.utcnow()
     request.db.cursor().execute(INSERT_ENTRY, [title, text, created])
 
-
+@view_config(route_name='home', renderer='templates/list.jinja2')
 def read_entries(request):
     """Read entries from the DB if there are any.
     Return a list of all entries as dicts"""
@@ -120,7 +115,6 @@ def read_entries(request):
     keys = ('id', 'title', 'text', 'created')
     entries = [dict(zip(keys, row)) for row in cursor.fetchall()]
     return {'entries': entries}
-
 
 
 if __name__ == '__main__':
