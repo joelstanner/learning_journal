@@ -65,6 +65,7 @@ def req_context(db, request):
         # afer a test has run, we clear out entries for isolation
         clear_entries(settings)
 
+
 # BEGIN TESTS #
 def test_write_entry(req_context):
     from journal import write_entry
@@ -112,6 +113,5 @@ def test_read_entries(req_context):
         assert expected[1] == entry['text']
         for key in 'id', 'created':
             assert key in entry
-
 
 
