@@ -11,6 +11,7 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.events import NewRequest, subscriber
 from pyramid.httpexceptions import HTTPFound, HTTPInternalServerError
+from pyramid.security import remember, forget
 from pyramid.session import SignedCookieSessionFactory
 from pyramid.view import view_config
 from waitress import serve
@@ -110,6 +111,7 @@ def main():
     config.include('pyramid_jinja2')
     config.add_route('home', '/')
     config.add_route('add', '/add')
+    config.add_route('login', '/login')
     config.scan()
     app = config.make_wsgi_app()
     return app
@@ -156,6 +158,26 @@ def do_login(request):
     if username == settings.get('auth.username', ''):
         hashed = settings.get('auth.password', '')
         return manager.check(hashed, password)
+
+
+@view_config(route_name='login', renderer="templates/login.jinja2")
+def login(request):
+    """authenticate a user by username/password"""
+    username = request.params.get('username', '')
+    error = ''
+    if request.method == 'POST':
+        error = "LOGIN FAILED"
+        authenticated = False
+        try:
+            authenticated = do_login(request)
+        except ValueError as e:
+            error = str(e)
+
+        if authenticated:
+            headers = remember(request, username)
+            return HTTPFound(request.route_url('home'), headers=headers)
+
+        return {'error': error, 'username': username}
 
 
 if __name__ == '__main__':

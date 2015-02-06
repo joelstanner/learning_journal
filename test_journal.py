@@ -261,5 +261,5 @@ def test_login_fails(app):
     response = login_helper(username, password, app)
     assert response.status_code == 200
     actual = response.body
-    assert "Login Failed" in actual
+    assert "LOGIN FAILED" in actual
     assert INPUT_BTN not in actual
