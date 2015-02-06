@@ -178,7 +178,7 @@ def login(request):
             headers = remember(request, username)
             return HTTPFound(request.route_url('home'), headers=headers)
 
-        return {'error': error, 'username': username}
+    return {'error': error, 'username': username}
 
 
 @view_config(route_name='logout')
