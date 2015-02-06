@@ -140,6 +140,19 @@ def read_entries(request):
     return {'entries': entries}
 
 
+def do_login(request):
+    username = request.params.get('username', None)
+    password = request.params.get('password', None)
+    if not (username and password):
+        raise ValueError('Both username and password are required')
+
+    settings = request.registry.settings
+    if username == settings.get('auth.username', ''):
+        if password == settings.get('auth.password', ''):
+            return True
+    return False
+
+
 if __name__ == '__main__':
     app = main()
     port = os.environ.get('PORT', 5000)
