@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from contextlib import closing
 from pyramid import testing
+from webtest import AppError
 import pytest
 import datetime
 import os
@@ -169,3 +170,13 @@ def test_post_to_add_view(app):
     actual = redirected.body
     for expected in entry_data.values():
         assert expected in actual
+
+
+def test_get_to_add_view(app):
+    entry_data = {
+        'title': 'Hello there',
+        'text': 'This is a post'
+    }
+    with pytest.raises(AppError) as excinfo:
+        response = app.get('/add', params=entry_data)
+        assert '404 Not Found' in str(excinfo)
