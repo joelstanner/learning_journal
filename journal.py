@@ -5,6 +5,7 @@ import logging
 import psycopg2
 
 from contextlib import closing
+from cryptacular.bcrypt import BCRYPTPasswordManager
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
@@ -88,6 +89,11 @@ def main():
     settings['db'] = os.environ.get(
         'DATABASE_URL', 'dbname=learning_journal user=Joel'
     )
+    settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
+    manager = BCRYPTPasswordManager()
+    settings['auth.password'] = os.environ.get(
+        'AUTH_PASSWORD', manager.encode('secret')
+    )
     # secret value for session signing
     secret = os.environ.get('JOURNAL_SESSION_SECRET', 'itsaseekrit')
     session_factory = SignedCookieSessionFactory(secret)
@@ -97,8 +103,7 @@ def main():
         settings=settings,
         session_factory=session_factory,
         authentication_policy=AuthTktAuthenticationPolicy(
-            secret=auth_secret,
-            hashalg='sha512'
+            secret=auth_secret, hashalg='sha512'
         ),
         authorization_policy=ACLAuthorizationPolicy(),
     )
@@ -147,10 +152,10 @@ def do_login(request):
         raise ValueError('Both username and password are required')
 
     settings = request.registry.settings
+    manager = BCRYPTPasswordManager()
     if username == settings.get('auth.username', ''):
-        if password == settings.get('auth.password', ''):
-            return True
-    return False
+        hashed = settings.get('auth.password', '')
+        return manager.check(hashed, password)
 
 
 if __name__ == '__main__':

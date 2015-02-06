@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 from contextlib import closing
+from cryptacular.bcrypt import BCRYPTPasswordManager
 from pyramid import testing
 from webtest import AppError
+
 import pytest
 import datetime
 import os
@@ -83,9 +85,10 @@ def entry(db, request):
 
 @pytest.fixture(scope='function')
 def auth_req(request):
+    manager = BCRYPTPasswordManager()
     settings = {
         'auth.username': 'admin',
-        'auth.password': 'secret',
+        'auth.password': manager.encode('secret'),
     }
     testing.setUp(settings=settings)
     req = testing.DummyRequest()
