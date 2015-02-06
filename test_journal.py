@@ -219,9 +219,47 @@ def test_do_login_bad_user(auth_req):
     auth_req.params = {'username': 'bad', 'password': 'secret'}
     assert not do_login(auth_req)
 
+
 def test_do_login_missing_params(auth_req):
     from journal import do_login
     for params in ({'username': 'admin'}, {'pasword': 'secret'}):
         auth_req.params = params
         with pytest.raises(ValueError):
             do_login(auth_req)
+
+
+INPUT_BTN = '<input type="submit" value="Share" name="Share"/>'
+
+
+def login_helper(username, password, app):
+    """encapsulate app login for reuse in TESTS
+
+    Accept all status codes so that we can make assertions in TESTS
+    """
+    login_data = {'username': username, 'password': password}
+    return app.post('/login', params=login_data, status='*')
+
+
+def test_start_as_anonymous(app):
+    response = app.get('/', status=200)
+    actual = response.body
+    assert INPUT_BTN not in actual
+
+
+def test_login_success(app):
+    username, password = ('admin', 'secret')
+    redirect = login_helper(username, password, app)
+    assert redirect.status_code == 302
+    response = redirect.follow()
+    assert response.status_code == 200
+    actual = response.body
+    assert INPUT_BTN in actual
+
+
+def test_login_fails(app):
+    username, password = ('admin', 'wrong')
+    response = login_helper(username, password, app)
+    assert response.status_code == 200
+    actual = response.body
+    assert "Login Failed" in actual
+    assert INPUT_BTN not in actual
