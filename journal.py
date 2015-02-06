@@ -5,6 +5,8 @@ import logging
 import psycopg2
 
 from contextlib import closing
+from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.config import Configurator
 from pyramid.events import NewRequest, subscriber
 from pyramid.httpexceptions import HTTPFound, HTTPInternalServerError
@@ -48,6 +50,8 @@ def init_db():
     settings['db'] = os.environ.get(
         'DATABASE_URL', 'dbname=learning_journal user=Joel'
     )
+    settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
+    settings['auth.password'] = os.environ.get('AUTH_PASSWORD', 'secret')
     with closing(connect_db(settings)) as db:
         db.cursor().execute(DB_SCHEMA)
         db.commit()
@@ -87,10 +91,16 @@ def main():
     # secret value for session signing
     secret = os.environ.get('JOURNAL_SESSION_SECRET', 'itsaseekrit')
     session_factory = SignedCookieSessionFactory(secret)
+    auth_secret = os.environ.get('JOURNAL_AUTH_SECRET', 'anotherseekrit')
     # configuration setup
     config = Configurator(
         settings=settings,
-        session_factory=session_factory
+        session_factory=session_factory,
+        authentication_policy=AuthTktAuthenticationPolicy(
+            secret=auth_secret,
+            hashalg='sha512'
+        ),
+        authorization_policy=ACLAuthorizationPolicy(),
     )
     config.include('pyramid_jinja2')
     config.add_route('home', '/')

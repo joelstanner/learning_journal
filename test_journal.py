@@ -81,6 +81,23 @@ def entry(db, request):
     return expected
 
 
+@pytest.fixture(scope='function')
+def auth_req(request):
+    settings = {
+        'auth.username': 'admin',
+        'auth.password': 'secret',
+    }
+    testing.setUp(settings=settings)
+    req = testing.DummyRequest()
+
+    def cleanup():
+        testing.tearDown()
+
+    request.addfinalizer(cleanup)
+
+    return req
+
+
 @pytest.yield_fixture(scope='function')
 def req_context(db, request):
     """mock a request with a database attached"""
@@ -180,3 +197,28 @@ def test_get_to_add_view(app):
     with pytest.raises(AppError) as excinfo:
         response = app.get('/add', params=entry_data)
         assert '404 Not Found' in str(excinfo)
+
+
+def test_do_login_success(auth_req):
+    from journal import do_login
+    auth_req.params = {'username': 'admin', 'password': 'secret'}
+    assert do_login(auth_req)
+
+
+def test_do_login_bad_pass(auth_req):
+    from journal import do_login
+    auth_req.params = {'username': 'admin', 'password': 'wrong'}
+    assert not do_login(auth_req)
+
+
+def test_do_login_bad_user(auth_req):
+    from journal import do_login
+    auth_req.params = {'username': 'bad', 'password': 'secret'}
+    assert not do_login(auth_req)
+
+def test_do_login_missing_params(auth_req):
+    from journal import do_login
+    for params in ({'username': 'admin'}, {'pasword': 'secret'}):
+        auth_req.params = params
+        with pytest.raises(ValueError):
+            do_login(auth_req)
