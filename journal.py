@@ -161,7 +161,7 @@ def do_login(request):
         return manager.check(hashed, password)
 
 
-@view_config(route_name='login', renderer="templates/login.jinja2")
+@view_config(route_name='login', renderer='templates/login.jinja2')
 def login(request):
     """authenticate a user by username/password"""
     username = request.params.get('username', '')
