@@ -189,6 +189,15 @@ p {
     width: 666px;
 }
 
+p.date {
+    bottom: 5px;
+    color: #980100;
+    font-size: 0.7em;
+    margin-left: 33px;
+    margin-top: 3px;
+    position: relative;
+}
+    
 .post-title{
     font-size: 1.3em;
 }
@@ -207,6 +216,58 @@ textarea {
     margin-left: auto;
     margin-right: auto;
     padding: 10px;
+}
+
+
+/* From the dev class */
+
+main {
+    padding:0 .75em 1em
+}
+
+main:after {
+    content:"";
+    display:table;
+    clear:both
+}
+
+main article {
+    margin-bottom:1em;
+    padding-left:.5em
+}
+
+main article h3 {
+    margin-top: 10px;
+}
+
+main article .entry_body {
+    margin:.5em
+}
+
+main aside {
+    float:right
+}
+
+main aside .field {
+    margin-bottom:1em
+}
+
+main aside .field input,main aside .field label,main aside .field textarea {
+    vertical-align:top
+}
+
+main aside .field label {
+    display: inline-block;
+    width: 45px;
+    padding-top: 2px
+}
+
+main aside .field input,main aside .field textarea {
+    width:83%
+}
+
+main aside .control_row input {
+    margin-left:16%
 }
 
 

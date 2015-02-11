@@ -20,7 +20,7 @@
   <h2>Entries</h2>
   {% for entry in entries %}
   <article class="detail" id="entry={{entry.id}}">
-    <h3>{{ entry.title }}</h3>
+    <h3 class="post-title">{{ entry.title }}</h3>
     <p class="date">{{ entry.created.strftime('%b. %d, %Y') }}
     <div class="entry_body">
       {{ entry.text|safe }}
