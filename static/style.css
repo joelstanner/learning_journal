@@ -195,7 +195,7 @@ p.date {
     color: #980100;
     font-size: 0.7em;
     margin-left: 33px;
-    margin-top: 3px;
+    margin-top: 6px;
     position: relative;
 }
     
@@ -226,10 +226,6 @@ main {
     padding:0 .75em 1em
 }
 
-section > h2 {
-    margin-top: 25px;
-}
-
 main:after {
     content:"";
     display:table;
@@ -242,7 +238,7 @@ main article {
 }
 
 main article h3 {
-    margin-top: 10px;
+    margin-top: 25px;
 }
 
 main article .entry_body {
