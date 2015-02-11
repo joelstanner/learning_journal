@@ -2,6 +2,11 @@ a {
     text-decoration: none;
 }
 
+.log {
+    clear: both;
+    float: right;
+}
+
 body {
     color: #014;
     font-family: "franklin-gothic-urw",sans-serif;
@@ -132,10 +137,6 @@ li.entry > a:hover {
     color: #05a;
 }
 
-.log {
-    float: right;
-}
-
 nav {
     background-color: #00aaff;
     margin-bottom: 30px;
@@ -223,6 +224,10 @@ textarea {
 
 main {
     padding:0 .75em 1em
+}
+
+section > h2 {
+    margin-top: 25px;
 }
 
 main:after {
