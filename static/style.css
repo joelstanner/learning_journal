@@ -1,91 +1,227 @@
+a {
+    text-decoration: none;
+}
+
 body {
-    color:#111;
-    padding:0;
-    margin:0
+    color: #014;
+    font-family: "franklin-gothic-urw",sans-serif;
+    background-color: #E3F4F4;
+}
+
+button {
+    padding:5px 15px;
+    background:#11ffff;
+    border:none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    display: block;
+    margin-left: 50px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+button:hover {
+    background:#45c4d2;
+}
+
+footer {
+    color: #959595;
+    clear: both;
+    margin-left: 128px;
+    margin-top: 32px;
+    font-size: 0.6em;
+
+}
+
+h1 {
+    font-size: 1.8em;
+    font-family: "franklin-gothic-urw",sans-serif;
+    font-weight: 700;
+    margin: 25px 25px 15px 25px;
+    color: #06e;
+}
+
+h2 {
+    font-size: 1.7em;
+    font-weight: 700;
+}
+
+h2.date {
+    color: #980100;
+    font-size: 0.8em;
+    margin:0 25px 25px 25px;
+
 }
 
 header {
-    margin:0;
-    padding:0 .75em;
-    width:100%
+    margin-bottom: 50px;
 }
 
-header:after {
-    content:"";
-    display:table;
-    clear:both
+header h1 {
+    font-family: "stencil-std",serif;
+    font-size: 2em;
+    color: #014;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    min-width: 830px;
 }
 
-header a {
-    text-decoration:none
+.head-shot {
+    float: right;
+    margin-left: 20px;
+    margin-right: 0px;
+    padding: 0 0 0 20px;
+    width: 200px;
+    height: 200px;
 }
 
-header aside {
-    float:right;
-    text-align:right;
-    padding-right:.75em
+.head-shot img {
+    width: 200px;
+    height: 200px;
+    position: relative;
 }
 
-header ul {
-    list-style:none;
-    list-style-type:none;
-    display:inline-block
+input[type=submit] {
+    padding:5px 15px;
+    background:#11ffff;
+    border: none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    display: block;
+    margin-left: 10px;
 }
 
-header ul li {
-    margin:0 .25em 0 0
+input[type=submit]:hover {
+    background:#45c4d2;
 }
 
-header ul li a {
-    padding:0;
-    display:inline-block
+label {
+    display: block;
 }
 
-main {
-    padding:0 .75em 1em
+
+li.date a {
+    bottom: 5px;
+    color: #980100;
+    font-size: 0.7em;
+    margin-left: 33px;
+    margin-top: 3px;
+    position: relative;
+    }
+
+li.entry {
+    color: #06e;
+    margin-top: 35px;
 }
 
-main:after {
-    content:"";
-    display:table;
-    clear:both
+li.entry i {
+    color: #013;
 }
 
-main article {
-    margin-bottom:1em;
-    padding-left:.5em
+li.entry > a {
+    color: #06e;
+    font-family: "franklin-gothic-urw",sans-serif;
+    font-size: 1.8em;
+    font-weight: 700;
 }
 
-main article h3 {
-    margin-top:0
+li.entry > a:hover {
+    color: #05a;
 }
 
-main article .entry_body {
-    margin:.5em
+.log {
+    float: right;
 }
 
-main aside {
-    float:right
+nav {
+    background-color: #00aaff;
+    margin-bottom: 30px;
+    overflow: hidden;
+    min-width: 780px;
 }
 
-main aside .field {
-    margin-bottom:1em
+nav i {
+    margin-right: 5px;
+    color: #eeffff;
 }
 
-main aside .field input,main aside .field label,main aside .field textarea {
-    vertical-align:top
-}
+nav > ul > li {
 
-main aside .field label {
     display: inline-block;
-    width: 45px;
-    padding-top: 2px
+    margin: auto;
 }
 
-main aside .field input,main aside .field textarea {
-    width:83%
+nav > ul > li > a {
+    color: #ddffff;
 }
 
-main aside .control_row input {
-    margin-left:16%
+nav > ul > li >a:hover {
+    color: #A8FFFF;
 }
+
+nav > ul > li.logo {
+    font-family: "stencil-std",serif;
+    font-size: 2em;
+    border-right: 1px;
+    border-style: solid;
+    border-color: #eeffff;
+    margin-right: 25px;
+    padding: 5px 25px 5px 5px;
+}
+
+.nav-a {
+    padding-right: 20px;
+}
+
+.new-entryform div{
+    margin: 10px;
+}
+
+p {
+    color: #014;
+    font-family: "franklin-gothic-urw",sans-serif;
+    text-indent: 25px;
+    line-height: 1.5;
+    margin: 0 15px 10px;
+    width: 666px;
+}
+
+.post-title{
+    font-size: 1.3em;
+}
+
+section .entries {
+    margin-left: 20px;
+}
+
+textarea {
+    height: auto;
+}
+
+#wrapper {
+    margin: 0 0 10px 10px;
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+}
+
+
+/*http://www.degraeve.com/color-palette/index.php?q=https://pbs.twimg.com/profile_images/1671065112/Joel_400x400.png,04132C005AA2018FD65CEEFAE7FBFB,000F400062F300B2FF0DFFFFDCFFFF*/
+
+/* colors:
+#001133
+#0055aa
+#0088dd
+#55eeff
+#eeffff
+dull
+#001144
+#0066ee
+#00aaff
+#11ffff
+#ddffff
+vibrant	*/

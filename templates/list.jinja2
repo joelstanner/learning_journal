@@ -19,9 +19,9 @@
 {% endif %}
   <h2>Entries</h2>
   {% for entry in entries %}
-  <article class="entry" id="entry={{entry.id}}">
+  <article class="detail" id="entry={{entry.id}}">
     <h3>{{ entry.title }}</h3>
-    <p class="dateline">{{ entry.created.strftime('%b. %d, %Y') }}
+    <p class="date">{{ entry.created.strftime('%b. %d, %Y') }}
     <div class="entry_body">
       {{ entry.text|safe }}
     </div>

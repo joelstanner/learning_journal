@@ -1,39 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <title>Python Learning Journal</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Just a Super Great Learning Journal</title>
+     <!-- adobe typekit -->
+    <script src="//use.typekit.net/ekk0avc.js"></script>
+    <script>try{Typekit.load();}catch(e){}</script>
     <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link href="/static/style.css" rel="stylesheet" type="text/css">
+    <!--"Font Awesome by Dave Gandy - http://fontawesome.io".-->
+    <link rel="stylesheet" href="static/font-awesome-4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/reset.css">
+    <link rel="stylesheet" href="static/style.css">
 
   </head>
   <body>
-    <header>
-      <aside id="user-controls">
-        <ul>
-        {% if not request.authenticated_userid %}
-          <li><a href="{{ request.route_url('login') }}">log in</a></li>
-        {% else %}
-          <li><a href="{{ request.route_url('logout') }}">log out</a></li>
-        {% endif %}
-        </ul>
-      </aside>
-      <nav>
-        <ul>
-          <li><a href="/">Home</a></li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <h1>My Python Journal</h1>
-      <section id="content">
-      {% block body %}{% endblock %}
-      </section>
-    </main>
-    <footer>
-      <p>Created in the Code Fellows Python Dev Accelerator</p>
-    </footer>
+    <div id="wrapper">
+      <header>
+        
+        <nav>
+          <ul class="nav">
+            <li class="logo">
+              <a href="/"><i class="fa fa-book fa-2x"></i>Learning Journal</a>
+            </li>
+            <li class="nav-a">
+              <a href="/"><i class="fa fa-home fa-fw"></i>Home</a>
+            </li>
+            <li class="nav-a" >
+              <a href="#"><i class="fa fa-bicycle fa-fw"></i>Page 1</a>
+            </li>
+            <li class="nav-a">
+              <a href="#"><i class="fa fa-file-text-o fa-fw"></i>Page 2</a>
+            </li>
+            {% if not request.authenticated_userid %}
+              <li class="nav-a log"><a href="{{ request.route_url('login') }}">log in</a></li>
+            {% else %}
+              <li class="nav-a log"><a href="{{ request.route_url('logout') }}">log out</a></li>
+            {% endif %}
+          </ul>
+          <aside id="user-controls">
+            <ul>
+            
+            </ul>
+          </aside>
+        </nav>
+      </header>
+      <main>
+        <h1>The Learning Journal of Joel Stanner</h1>
+        <div class="head-shot">
+          <img src="https://pbs.twimg.com/profile_images/1671065112/Joel.png"
+             alt="Photograph of Joel Stanner">
+          <!-- photo by Dave Werk -->
+        </div>
+  
+        <section id="content">
+        {% block body %}{% endblock %}
+        </section>
+      </main>
+      <footer>
+        copyright &copy;2015 JoelStanner Industries
+      </footer>
+    </div>
+    
   </body>
 </html>
