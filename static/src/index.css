@@ -1,0 +1,71 @@
+
+@import 'normalize.css';
+@import 'reset.css';
+@import 'buttons.css';
+@import 'forms.css';
+@import 'color.css';
+@import 'spacing.css';
+@import 'typography.css';
+@import 'links.css';
+@import 'lists.css';
+@import 'tables.css';
+@import 'layout.css';
+@import 'flexbox.css';
+
+
+/* Uncomment and redefine the variables below to change to the generated stylesheet. */
+:root {
+
+	/* TYPOGRAPHY */
+	/* --ms3: ; */
+	/* --ms2: ; */
+	/* --ms1: ; */
+	/* --ms0: ; */
+	/* --copy-font:	; */
+	/* --copy-font-weight: ; */
+	/* --copy-font-color:	; */
+	/* --heading-font: ; */
+	/* --heading-font-color: ; */
+	/* --heading-font-weight: ; */
+	/* --monospace-font: ; */
+	/* --line-height: ; */
+	/* --font-weight-light: ; */
+	/* --font-weight-book:	; */
+	/* --font-weight-medium: ; */
+	/* --font-weight-semibold: ; */
+	/* --font-weight-bold: ; */
+	/* --font-weight-black: ; */
+
+	/* LINKS */
+	/* --link-color: ; */
+	/* --link-color-hover: ; */
+
+	/* LAYOUT */	
+	/* --container-width: ; */
+
+}
+
+body {
+    background: #F9F8F8;
+}
+
+textarea {
+    width: 100%;
+}
+
+header {
+    position: fixed;
+    top: 4rem;
+    right: 4rem;
+}
+
+.button {
+    padding: 5px 10px;
+    background: white;
+    border-radius: 3px;
+}
+
+input {
+    border: none;
+    padding: 5px 10px;
+}

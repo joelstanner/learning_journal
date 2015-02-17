@@ -19,11 +19,13 @@
 {% endif %}
   <h2>Entries</h2>
   {% for entry in entries %}
-  <article class="detail" id="entry={{entry.id}}">
-    <h3 class="post-title">{{ entry.title }}</h3>
+  <article class="detail" id="entry={{ entry.id }}">
+    <a href='{{ request.route_url('entry', id=entry.id) }}'>
+      <h3 class="post-title">{{ entry.title }}</h3>
+    </a>
     <p class="date">{{ entry.created.strftime('%b. %d, %Y') }}
     <div class="entry_body">
-      {{ entry.text|safe }}
+      {{ entry.text| markdown | safe }}
     </div>
   </article>
   {% else %}

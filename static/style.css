@@ -203,6 +203,12 @@ p.date {
     font-size: 1.3em;
 }
 
+
+pre {
+    font-family: monospace;
+    font-size: 1.1em;
+}
+
 section .entries {
     margin-left: 20px;
 }
@@ -233,7 +239,8 @@ main:after {
 }
 
 main article {
-    margin-bottom:1em;
+    margin-top: 50px;
+    margin-bottom: 80px;
     padding-left:.5em
 }
 

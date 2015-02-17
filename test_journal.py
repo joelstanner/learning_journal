@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
 from contextlib import closing
-from cryptacular.bcrypt import BCRYPTPasswordManager
 from pyramid import testing
-from webtest import AppError
 
+import os
 import pytest
 import datetime
-import os
+from journal import connect_db
+from journal import DB_SCHEMA
+from journal import INSERT_ENTRY
+from cryptacular.bcrypt import BCRYPTPasswordManager
 
-from journal import INSERT_ENTRY, connect_db, DB_SCHEMA
-
-
-TEST_DSN = 'dbname=test_learning_journal user=Joel'
+TEST_DSN = 'dbname=test_learning_journal user=postgres'
 
 
 def init_db(settings):
@@ -36,6 +34,7 @@ def run_query(db, query, params=(), get_results=True):
     cursor = db.cursor()
     cursor.execute(query, params)
     db.commit()
+
     results = None
     if get_results:
         results = cursor.fetchall()
@@ -44,7 +43,7 @@ def run_query(db, query, params=(), get_results=True):
 
 @pytest.fixture(scope='session')
 def db(request):
-    """set up and tear down a database"""
+    '''Set up and tear down a database.'''
     settings = {'db': TEST_DSN}
     init_db(settings)
 
@@ -56,6 +55,20 @@ def db(request):
     return settings
 
 
+@pytest.yield_fixture(scope='function')
+def req_context(db, request):
+    '''Mock a request with a database attached.'''
+    settings = db
+    req = testing.DummyRequest()
+    with closing(connect_db(settings)) as db:
+        req.db = db
+        req.exception = None
+        yield req
+
+        # After the test has run, clear out the entries
+        clear_entries(settings)
+
+
 @pytest.fixture(scope='function')
 def app(db):
     from journal import main
@@ -65,91 +78,38 @@ def app(db):
     return TestApp(app)
 
 
-@pytest.fixture(scope='function')
-def entry(db, request):
-    """provide a single entry in the database"""
-    settings = db
-    now = datetime.datetime.utcnow()
-    expected = ('Test Title', 'Test Text', now)
-    with closing(connect_db(settings)) as db:
-        run_query(db, INSERT_ENTRY, expected, False)
-        db.commit()
-
-    def cleanup():
-        clear_entries(settings)
-
-    request.addfinalizer(cleanup)
-
-    return expected
-
-
-@pytest.fixture(scope='function')
-def auth_req(request):
-    manager = BCRYPTPasswordManager()
-    settings = {
-        'auth.username': 'admin',
-        'auth.password': manager.encode('secret'),
-    }
-    testing.setUp(settings=settings)
-    req = testing.DummyRequest()
-
-    def cleanup():
-        testing.tearDown()
-
-    request.addfinalizer(cleanup)
-
-    return req
-
-
-@pytest.yield_fixture(scope='function')
-def req_context(db, request):
-    """mock a request with a database attached"""
-    settings = db
-    req = testing.DummyRequest()
-    with closing(connect_db(settings)) as db:
-        req.db = db
-        req.exception = None
-        yield req
-
-        # afer a test has run, we clear out entries for isolation
-        clear_entries(settings)
-
-
-# BEGIN TESTS #
-def test_write_entry(req_context):
-    from journal import write_entry
-    fields = ('title', 'text')
-    expected = ('Test Title', 'Test Text')
-    req_context.params = dict(zip(fields, expected))
-
-    # assert that there are no entries when we start
-    rows = run_query(req_context.db, "SELECT * FROM entries")
-    assert len(rows) == 0
-
-    result = write_entry(req_context)
-    # manually commit so we can see the entry on query
-    req_context.db.commit()
-
-    rows = run_query(req_context.db, "SELECT title, text FROM entries")
-    assert len(rows) == 1
-    actual = rows[0]
-    for idx, val in enumerate(expected):
-        assert val == actual[idx]
+#def test_write_entry(req_context):
+#    username, password = ('admin', 'secret')
+#    redirect = login_helper(username, password, app)
+#    from journal import add
+#    fields = ('title', 'text')
+#    expected = ('Test Title', 'Test Text')
+#    req_context.params = dict(zip(fields, expected))
+#
+#    # assert that there are no entries when we start
+#    rows = run_query(req_context.db, "SELECT * FROM entries")
+#    assert len(rows) == 0
+#    result = add(req_context)
+#    # manually commit so we can see the entry on query
+#    req_context.db.commit()
+#
+#    rows = run_query(req_context.db, "SELECT title, text FROM entries")
+#    assert len(rows) == 1
+#    actual = rows[0]
+#    for idx, val in enumerate(expected):
+#        assert val == actual[idx]
 
 
 def test_read_entries_empty(req_context):
-    # call the function under test
     from journal import read_entries
     result = read_entries(req_context)
-    # make assertions about the result
     assert 'entries' in result
     assert len(result['entries']) == 0
 
 
 def test_read_entries(req_context):
-    # prepare data for testing
     now = datetime.datetime.utcnow()
-    expected = ('Test Title', 'Test Text', now)
+    expected = ('Test Title', '<p>Test Text</p>', now)
     run_query(req_context.db, INSERT_ENTRY, expected, False)
     # call the function under test
     from journal import read_entries
@@ -167,9 +127,28 @@ def test_read_entries(req_context):
 def test_empty_listing(app):
     response = app.get('/')
     assert response.status_code == 200
+
     actual = response.body
-    expected = 'No entries here so far'
+    expected = 'Nothin!'
     assert expected in actual
+
+
+@pytest.fixture(scope='function')
+def entry(db, request):
+    '''provide a single entry in the database'''
+    settings = db
+    now = datetime.datetime.utcnow()
+    expected = ('Test Title', 'Test Text', now)
+    with closing(connect_db(settings)) as db:
+        run_query(db, INSERT_ENTRY, expected, False)
+        db.commit()
+
+    def cleanup():
+        clear_entries(settings)
+
+    request.addfinalizer(cleanup)
+
+    return expected
 
 
 def test_listing(app, entry):
@@ -181,6 +160,8 @@ def test_listing(app, entry):
 
 
 def test_post_to_add_view(app):
+    username, password = ('admin', 'secret')
+    redirect = login_helper(username, password, app)
     entry_data = {
         'title': 'Hello there',
         'text': 'This is a post',
@@ -191,15 +172,25 @@ def test_post_to_add_view(app):
     for expected in entry_data.values():
         assert expected in actual
 
+# TODO: Add test for app.get('/add')
 
-def test_get_to_add_view(app):
-    entry_data = {
-        'title': 'Hello there',
-        'text': 'This is a post'
+
+@pytest.fixture(scope='function')
+def auth_req(request):
+    manager = BCRYPTPasswordManager()
+    settings = {
+        'auth.username': 'admin',
+        'auth.password': manager.encode('secret'),
     }
-    with pytest.raises(AppError) as excinfo:
-        response = app.get('/add', params=entry_data)
-        assert '404 Not Found' in str(excinfo)
+
+    testing.setUp(settings=settings)
+    req = testing.DummyRequest()
+
+    def cleanup():
+        testing.tearDown()
+
+    request.addfinalizer(cleanup)
+    return req
 
 
 def test_do_login_success(auth_req):
@@ -222,25 +213,22 @@ def test_do_login_bad_user(auth_req):
 
 def test_do_login_missing_params(auth_req):
     from journal import do_login
-    for params in ({'username': 'admin'}, {'pasword': 'secret'}):
+    for params in ({'username': 'admin'}, {'password': 'secret'}):
         auth_req.params = params
         with pytest.raises(ValueError):
             do_login(auth_req)
 
 
-INPUT_BTN = '<input type="submit" value="Share" name="Share"/>'
+INPUT_BTN = "<input class='display-block' type='submit' value='Add post' name='Add post' />"
 
 
 def login_helper(username, password, app):
-    """encapsulate app login for reuse in TESTS
-
-    Accept all status codes so that we can make assertions in TESTS
-    """
+    '''encapsulate app login for reuse in later tests'''
     login_data = {'username': username, 'password': password}
     return app.post('/login', params=login_data, status='*')
 
 
-def test_start_as_anonymous(app):
+def test_start_as_anon(app):
     response = app.get('/', status=200)
     actual = response.body
     assert INPUT_BTN not in actual
@@ -261,14 +249,14 @@ def test_login_fails(app):
     response = login_helper(username, password, app)
     assert response.status_code == 200
     actual = response.body
-    assert "LOGIN FAILED" in actual
+    assert "Login Failed" in actual
     assert INPUT_BTN not in actual
 
 
 def test_logout(app):
-    # re-use existing code to ensure we are loggin in when we begin
+    # Re-use existing code to ensure we are logged out when we begin.
     test_login_success(app)
-    redirect = app.get('/logout', status="3*")
+    redirect = app.get('/logout', status='3*')
     response = redirect.follow()
     assert response.status_code == 200
     actual = response.body

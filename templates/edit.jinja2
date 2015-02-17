@@ -1,0 +1,17 @@
+{% extends "base.jinja2" %}
+{% block body %}
+{% if request.authenticated_userid %}
+
+    <h1>Edit post</h1>
+    {% for entry in entries %}
+        <form action="" method="POST">
+            <input class='display-block' type='text'
+                   name='title' id='title' size="40" value="{{ entry.title }}"/>
+            <textarea class='display-block' name='text' id='text'
+                      rows="10" cols="80">{{ entry.text|safe }}</textarea>
+            <input class='display-block' type='submit'
+                   value='Save post' name='Save post' />
+        </form>
+    {% endfor %}
+{% endif %}
+{% endblock %}
