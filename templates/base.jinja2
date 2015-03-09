@@ -30,12 +30,6 @@
             <li class="nav-a">
               <a href="/"><i class="fa fa-home fa-fw"></i>Home</a>
             </li>
-            <li class="nav-a" >
-              <a href="#"><i class="fa fa-bicycle fa-fw"></i>Page 1</a>
-            </li>
-            <li class="nav-a">
-              <a href="#"><i class="fa fa-file-text-o fa-fw"></i>Page 2</a>
-            </li>
             {% if not request.authenticated_userid %}
               <li class="nav-a log"><a href="{{ request.route_url('login') }}">log in</a></li>
             {% else %}
