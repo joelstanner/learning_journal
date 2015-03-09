@@ -60,7 +60,7 @@ def init_db():
     """Create database dables defined by DB_SCHEMA"""
     settings = {}
     settings['db'] = os.environ.get(
-        'DATABASE_URL', 'dbname=learning-journal user=Joel')
+        'DATABASE_URL', 'dbname=learning-journal user=postgres')
     settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
     settings['auth.password'] = os.environ.get('AUTH_PASSWORD', 'secret')
 
@@ -230,7 +230,7 @@ def main():
     settings['debug_all'] = os.environ.get('DEBUG', True)
     settings['reload_all'] = os.environ.get('DEBUG', True)
     settings['db'] = os.environ.get('DATABASE_URL',
-                                    'dbname=learning-journal user=Joel')
+                                    'dbname=learning-journal user=postgres')
     settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
     settings['auth.password'] = os.environ.get('AUTH_PASSWORD',
                                                manager.encode('secret'))
