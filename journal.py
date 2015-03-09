@@ -205,21 +205,9 @@ def update(request, entry_id):
     """Helper to update the database"""
     title = request.params['title']
     text = request.params['text']
-    created = datetime.datetime.utcnow()
     request.db.cursor().execute(
-        ENTRY_UPDATE, [title, text, created, entry_id]
+        ENTRY_UPDATE, [title, text, entry_id]
     )
-
-
-@view_config(route_name='update', request_method='POST')
-def update_entry(request):
-    """Update an entry in the database"""
-    entry_id = request.matchdict.get('id', -1)
-    try:
-        update(request, entry_id)
-    except psycopg2.Error:
-        return HTTPInternalServerError
-    return HTTPFound(request.route_url('home'))
 
 
 def main():

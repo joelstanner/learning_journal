@@ -88,6 +88,10 @@ header h1 {
     position: relative;
 }
 
+.hidden {
+    display: none;
+}
+
 input[type=submit] {
     padding:5px 15px;
     background:#11ffff;

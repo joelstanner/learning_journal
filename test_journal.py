@@ -129,7 +129,7 @@ def test_empty_listing(app):
     assert response.status_code == 200
 
     actual = response.body
-    expected = 'Nothin!'
+    expected = 'No entries here so far'
     assert expected in actual
 
 
@@ -219,7 +219,7 @@ def test_do_login_missing_params(auth_req):
             do_login(auth_req)
 
 
-INPUT_BTN = "<input class='display-block' type='submit' value='Add post' name='Add post' />"
+INPUT_BTN = '<input type="submit" value="Share" name="Share"/>'
 
 
 def login_helper(username, password, app):
