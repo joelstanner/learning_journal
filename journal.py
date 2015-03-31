@@ -6,7 +6,6 @@ import psycopg2
 import markdown
 import jinja2
 import datetime
-import pytest
 
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory
@@ -47,7 +46,7 @@ INDIVIDUAL_ENTRY = '''
 '''
 
 ENTRY_UPDATE = '''
-    UPDATE entries SET title=%s, text=%s, created=%s WHERE id= %s
+    UPDATE entries SET title=%s, text=%s WHERE id= %s
 '''
 
 
@@ -60,7 +59,7 @@ def init_db():
     """Create database dables defined by DB_SCHEMA"""
     settings = {}
     settings['db'] = os.environ.get(
-        'DATABASE_URL', 'dbname=learning-journal user=Joel')
+        'DATABASE_URL', 'dbname=learning-journal user=postgres')
     settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
     settings['auth.password'] = os.environ.get('AUTH_PASSWORD', 'secret')
 
@@ -205,21 +204,9 @@ def update(request, entry_id):
     """Helper to update the database"""
     title = request.params['title']
     text = request.params['text']
-    created = datetime.datetime.utcnow()
     request.db.cursor().execute(
-        ENTRY_UPDATE, [title, text, created, entry_id]
+        ENTRY_UPDATE, [title, text, entry_id]
     )
-
-
-@view_config(route_name='update', request_method='POST')
-def update_entry(request):
-    """Update an entry in the database"""
-    entry_id = request.matchdict.get('id', -1)
-    try:
-        update(request, entry_id)
-    except psycopg2.Error:
-        return HTTPInternalServerError
-    return HTTPFound(request.route_url('home'))
 
 
 def main():
@@ -230,7 +217,7 @@ def main():
     settings['debug_all'] = os.environ.get('DEBUG', True)
     settings['reload_all'] = os.environ.get('DEBUG', True)
     settings['db'] = os.environ.get('DATABASE_URL',
-                                    'dbname=learning-journal user=Joel')
+                                    'dbname=learning-journal user=postgres')
     settings['auth.username'] = os.environ.get('AUTH_USERNAME', 'admin')
     settings['auth.password'] = os.environ.get('AUTH_PASSWORD',
                                                manager.encode('secret'))

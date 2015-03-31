@@ -1,4 +1,6 @@
 {% extends 'base.jinja2' %}
+{% block title %} {{ entry.title }} — {% endblock %}
+
 {% block body %}
 
     <article id='entry={{ entry.id }}' class='mbl'>
@@ -8,13 +10,29 @@
             </a> 
             <span class='light h4'>{{ entry.created.strftime('%b. %d, %Y') }}</span>
         </h2>
-        <section>
+        <section id="entry_text">
             {{ entry.text | markdown | safe }}
         </section>
         {% if request.authenticated_userid %}
-            <p class='edit'>
-                <a href='{{ request.route_url('edit', id=entry.id) }}'>Edit</a>
-            </p>
+            <button class='button toggle-form'>Edit post</button>
+            <form action="" method="POST" class='add-entry hidden'>
+                <input class='display-block' type='text' name='title' id='title' size="40" value="{{ entry.title }}"/>
+                <textarea class='display-block' name='text' id='text' rows="10" cols="80">{{ entry.text|safe }}</textarea>
+                <input class='display-block' type='submit' value='Save post' name='Save post' />
+            </form>
+            <p><a href="https://twitter.com/share" class="twitter-share-button"
+               data-via="jstanner" data-count="none" data-dnt="true">Tweet</a></p>
+            
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
         {% endif %}
     </article>
 {% endblock %}
+
+
+        <p class='sans alert toggle-form'>Edit post</p>
+        <form action="" method="POST" class='add-entry hidden'>
+            <input class='display-block' type='text' name='title' id='title' size="40" value="{{ entry.title }}"/>
+            <textarea class='display-block' name='text' id='text' rows="10" cols="80">{{ entry.text|safe }}</textarea>
+            <input class='display-block' type='submit' value='Save post' name='Save post' />
+        </form>

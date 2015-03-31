@@ -18,6 +18,7 @@
   </aside>
 {% endif %}
   <h2>Entries</h2>
+  <div id="newentry"></div>
   {% for entry in entries %}
   <article class="detail" id="entry={{ entry.id }}">
     <a href='{{ request.route_url('entry', id=entry.id) }}'>

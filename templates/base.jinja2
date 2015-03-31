@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Just a Super Great Learning Journal</title>
+    <title>{% block title %}{%endblock %} Just a Super Great Learning Journal</title>
      <!-- adobe typekit -->
     <script src="//use.typekit.net/ekk0avc.js"></script>
     <script>try{Typekit.load();}catch(e){}</script>
@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="/static/reset.css">
     <link rel="stylesheet" href="/static/style.css">
     <link rel='stylesheet' href='/static/src/codehilite.css'>
+    <script type='text/javascript' src='https://code.jquery.com/jquery-2.1.3.min.js'></script>
+
 
   </head>
   <body>
@@ -27,12 +29,6 @@
             </li>
             <li class="nav-a">
               <a href="/"><i class="fa fa-home fa-fw"></i>Home</a>
-            </li>
-            <li class="nav-a" >
-              <a href="#"><i class="fa fa-bicycle fa-fw"></i>Page 1</a>
-            </li>
-            <li class="nav-a">
-              <a href="#"><i class="fa fa-file-text-o fa-fw"></i>Page 2</a>
             </li>
             {% if not request.authenticated_userid %}
               <li class="nav-a log"><a href="{{ request.route_url('login') }}">log in</a></li>
@@ -63,6 +59,8 @@
         copyright &copy;2015 JoelStanner Industries
       </footer>
     </div>
-    
+    <script type='text/javascript' src='/static/js/toggle-form.js'></script>
+    <script type='text/javascript' src='/static/js/add-entry.js'></script>
+
   </body>
 </html>
