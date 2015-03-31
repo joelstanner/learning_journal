@@ -6,7 +6,6 @@ import psycopg2
 import markdown
 import jinja2
 import datetime
-import pytest
 
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory
@@ -47,7 +46,7 @@ INDIVIDUAL_ENTRY = '''
 '''
 
 ENTRY_UPDATE = '''
-    UPDATE entries SET title=%s, text=%s, created=%s WHERE id= %s
+    UPDATE entries SET title=%s, text=%s WHERE id= %s
 '''
 
 
